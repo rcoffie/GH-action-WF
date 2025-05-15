@@ -6,6 +6,13 @@ on:
   pull_request:
     branches:
       - main
+    workflow_dispatch:
+
+env: 
+  RESOURCE_GROUP: rg-bicep-github-actions-037
+  ENVIROMENT    : test
+
+
 jobs:
     say-hello:
         runs-on: ubuntu-latest
@@ -19,9 +26,9 @@ jobs:
               with:
                   creds: ${{ secrets.AZURE_CREDENTIALS }}
             - name: 'Deploying to azure'
-              uses: azure/webapps-deploy@v2
+              uses: azure/ arm-deploy@v1
               with:
                   resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
-                  template: ./azure/deploy-toy-website.bicep
-                  parameters: environment=Test
+                  template: ./deploy/main.bicep
+                  parameters: enviromentType=${{ env.ENVIROMENT }}
             
