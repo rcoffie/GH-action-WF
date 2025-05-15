@@ -4,5 +4,18 @@ jobs:
     say-hello:
         runs-on: ubuntu-latest
         steps:
-            - name: 'placeholder step'
-              run: echo "Hello, world!"
+            - name: 'Checking out respository'
+              uses: actions/checkout@v2
+              with:
+                  path: repo
+            - name: 'logging in to azure'
+              uses: azure/login@v1
+              with:
+                  creds: ${{ secrets.AZURE_CREDENTIALS }}
+            - name: 'Deploying to azure'
+              uses: azure/webapps-deploy@v2
+              with:
+                  resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+                  template: ./azure/deploy-toy-website.bicep
+                  parameters: environment=Test
+            
