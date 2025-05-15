@@ -6,35 +6,34 @@ on:
   pull_request:
     branches:
       - main
-    workflow_dispatch:
+  workflow_dispatch:
 
 env: 
   RESOURCE_GROUP: rg-bicep-github-actions-037
-  ENVIROMENT    : test
-
+  ENVIRONMENT: test
 
 jobs:
     say-hello:
         runs-on: ubuntu-latest
         steps:
-            - name: 'Checking out respository'
-              uses: actions/checkout@v2
-              with:
-                  path: repo
-            - name: 'logging in to azure'
+            - name: 'Checking out repository'
+              uses: actions/checkout@v4
+              
+            - name: 'Logging in to Azure'
               uses: azure/login@v1
               with:
                   creds: ${{ secrets.AZURE_CREDENTIALS }}
-            -name: 'Create a Resource Group'
-             uses: Azure/cli@v1.0.6
-             with:
+                  
+            - name: 'Create a Resource Group'
+              uses: Azure/cli@v1.0.6
+              with:
                 inlineScript: |
                   az version
-                  az group create -n $RESOURCE_GROUP -1 eastus
-            - name: 'Deploying to azure'
+                  az group create -n ${{ env.RESOURCE_GROUP }} -l eastus
+                  
+            - name: 'Deploying to Azure'
               uses: azure/arm-deploy@v1
               with:
-                  resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
-                  template: ./deploy/main.bicep
-                  parameters: enviromentType=${{ env.ENVIROMENT }}
-            
+                  resource-group: ${{ env.RESOURCE_GROUP }}
+                  template-file: ./deploy/main.bicep
+                  parameters: environmentType=${{ env.ENVIRONMENT }}
