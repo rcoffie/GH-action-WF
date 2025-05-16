@@ -33,5 +33,5 @@ jobs:
       with:
         resourceGroupName: ${{ env.RESOURCE_GROUP }}
         template-file: deploy/main.bicep
-        # parameters: environmentType=Test
+        parameters: environmentType=${{ github.event.inputs.environment || 'dev' }}
  
