@@ -14,3 +14,23 @@ output:
   "galleryEndpointUrl": "https://gallery.azure.com/",
   "managementEndpointUrl": "https://management.core.windows.net/"
 }
+
+## Steps in Automating Bicep files deployment uisng GH-actions
+
+* specify name
+* on -> pull request to the main branch
+* workflow_dispatch optional
+* env
+  * Resource Group
+  * Location
+* Jobs -> Preview and Deploy
+  * runs on -> ubuntu-lastest
+* Steps
+  * uses: checkouts the repository
+  * name: login into azure with the below action
+  * uses: Azure/Login
+  * with: your creds added in secrets
+  * name: create resource group
+  * uses: Azure/cli
+  * with: 
+
