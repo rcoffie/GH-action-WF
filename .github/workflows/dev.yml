@@ -32,6 +32,6 @@ jobs:
     - uses: azure/arm-deploy@v1
       with:
         resourceGroupName: ${{ env.RESOURCE_GROUP }}
-        template-file: ./main.bicep
+        template: ./main.bicep
         parameters: environmentType=${{ github.event.inputs.environment || 'dev' }}
         failOnStdErr: false
