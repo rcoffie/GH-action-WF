@@ -1,61 +1,61 @@
-name: Deploy Bicep Infrastructure
+# name: Deploy Bicep Infrastructure
 
-on:
-  push:
-    # branches:
-    #   - main
-  pull_request:
-    # branches:
-    #   - main
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy to'
-        required: true
-        default: 'dev'
-        type: choice
-        options:
-          - dev
-          - test
-          - prod
+# on:
+#   push:
+#     # branches:
+#     #   - main
+#   pull_request:
+#     # branches:
+#     #   - main
+#   workflow_dispatch:
+#     inputs:
+#       environment:
+#         description: 'Environment to deploy to'
+#         required: true
+#         default: 'dev'
+#         type: choice
+#         options:
+#           - dev
+#           - test
+#           - prod
 
-env:
-  RESOURCE_GROUP: rg-bicep-deployment
-  LOCATION: eastus
+# env:
+#   RESOURCE_GROUP: rg-bicep-deployment
+#   LOCATION: eastus
   
-jobs:
-  deploy:
-    name: Deploy Bicep Template
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     name: Deploy Bicep Template
+#     runs-on: ubuntu-latest
     
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
       
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+#       - name: Login to Azure
+#         uses: azure/login@v1
+#         with:
+#           creds: ${{ secrets.AZURE_CREDENTIALS }}
       
-      - name: Create Resource Group if it doesn't exist
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            if [ $(az group exists --name ${{ env.RESOURCE_GROUP }}) = false ]; then
-              echo "Creating resource group ${{ env.RESOURCE_GROUP }}"
-              az group create --name ${{ env.RESOURCE_GROUP }} --location ${{ env.LOCATION }}
-            else
-              echo "Resource group ${{ env.RESOURCE_GROUP }} already exists"
-            fi
+#       - name: Create Resource Group if it doesn't exist
+#         uses: azure/CLI@v1
+#         with:
+#           inlineScript: |
+#             if [ $(az group exists --name ${{ env.RESOURCE_GROUP }}) = false ]; then
+#               echo "Creating resource group ${{ env.RESOURCE_GROUP }}"
+#               az group create --name ${{ env.RESOURCE_GROUP }} --location ${{ env.LOCATION }}
+#             else
+#               echo "Resource group ${{ env.RESOURCE_GROUP }} already exists"
+#             fi
       
-      - name: Deploy Bicep template
-        uses: azure/arm-deploy@v1
-        with:
-          resourceGroupName: ${{ env.RESOURCE_GROUP }}
-          template-file: ./deploy/main.bicep
-          parameters: environmentType=${{ github.event.inputs.environment || 'dev' }}
-          deploymentName: github-action-${{ github.run_id }}
+#       - name: Deploy Bicep template
+#         uses: azure/arm-deploy@v1
+#         with:
+#           resourceGroupName: ${{ env.RESOURCE_GROUP }}
+#           template-file: ./deploy/main.bicep
+#           parameters: environmentType=${{ github.event.inputs.environment || 'dev' }}
+#           deploymentName: github-action-${{ github.run_id }}
       
-      - name: Logout from Azure
-        if: always()
-        run: az logout
+#       - name: Logout from Azure
+#         if: always()
+#         run: az logout
